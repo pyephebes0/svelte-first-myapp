@@ -16,7 +16,7 @@
 
 <h1>โปรไฟล์</h1>
 
-<h1>สวัสดีคุณ {user.username}</h1>
+<h1>สวัสดีคุณ {user.username} </h1>
 <p>นี่คือหน้าส่วนตัวของคุณ</p>
 
 <input bind:value={gender} placeholder="เพศ" />
