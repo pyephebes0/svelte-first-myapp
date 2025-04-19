@@ -4,6 +4,7 @@ import { Post } from '$lib/server/models/Post';
 import { getUserFromToken } from '$lib/server/utils';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 export async function POST({ request }) {
   await connectDB();
@@ -28,7 +29,7 @@ export async function POST({ request }) {
 
   // สร้าง path เก็บไฟล์ใน /static/uploads
   const uploadDir = 'static/uploads';
-  const fileName = `${Date.now()}-${image.name}`;
+  const fileName = `${crypto.randomUUID()}.${image.name.split('.').pop()}`;
   const filePath = path.join(uploadDir, fileName);
   const buffer = Buffer.from(await image.arrayBuffer());
 
