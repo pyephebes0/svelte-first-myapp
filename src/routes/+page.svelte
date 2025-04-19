@@ -77,7 +77,7 @@
 
   button {
     padding: 12px 20px;
-    background-color: #0077cc;
+    background-color: #6c63ff;
     color: white;
     border: none;
     border-radius: 4px;
@@ -87,7 +87,7 @@
   }
 
   button:hover {
-    background-color: #005fa3;
+    background-color: #5a54d1;
   }
 
   /* Post Grid (4 Posts per Row) */
