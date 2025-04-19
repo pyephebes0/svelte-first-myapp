@@ -10,7 +10,6 @@
 	let user = data.user;
 	let posts = data.posts; // ✅ ต้องมีบรรทัดนี้
 
-	console.log(posts);
 
 	let provinces = [
 		'กรุงเทพมหานคร',
@@ -69,6 +68,23 @@
 			alert(data.error || 'เกิดข้อผิดพลาด');
 		}
 	}
+
+  async function deletePost(id) {
+    const confirmed = confirm('คุณแน่ใจหรือไม่ว่าต้องการลบโพสต์นี้?');
+    if (!confirmed) return;
+
+    const res = await fetch(`/api/posts/delete/${id}`, {
+      method: 'DELETE'
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      // ลบโพสต์จาก array ทันที (ไม่ต้อง reload หน้า)
+      posts = posts.filter(p => p._id !== id);
+    } else {
+      alert(data.message || 'ลบโพสต์ไม่สำเร็จ');
+    }
+  }
 </script>
 
 <div class="profile-container">
@@ -76,7 +92,8 @@
 	<div class="left-panel">
 		<!-- Profile Section -->
 		<div class="profile-header">
-			<h1>โปรไฟล์ของ {user.username}</h1>
+			<h1>โปรไฟล์ของ {user.username} </h1>
+      <a href="/edit-profile" class="edit-link">แก้ไขโปรไฟล์</a>
 			<p>ยินดีต้อนรับเข้าสู่โปรไฟล์ส่วนตัวของคุณ</p>
 		</div>
 
@@ -132,7 +149,8 @@
 					<p><strong>อายุ:</strong> {post.age}</p>
 					<p><strong>ไลน์:</strong> {post.line}</p>
 					<p><strong>จังหวัด:</strong> {post.province}</p>
-					<p><strong>รายละเอียด:</strong> {post.description}</p>
+					<p><strong>รายละเอียด:</strong> {post.details}</p>
+          <button on:click={() => deletePost(post._id)}>🗑 ลบโพสต์</button>
 				</div>
 			{/each}
 		{:else}
@@ -190,6 +208,20 @@
 		height: auto;
 		border-radius: 4px;
 	}
+
+  .post-item button {
+    margin-top: 10px;
+    background-color: #cc0000;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .post-item button:hover {
+    background-color: #a00000;
+  }
 
 	label {
 		display: block;
