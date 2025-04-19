@@ -2,7 +2,8 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
-  let loggedIn = false;
+  export let data;
+  let loggedIn = data.isLoggedIn;
 
   export async function load({ cookies }) {
     // ตรวจสอบว่า cookies มี token หรือไม่
@@ -14,8 +15,6 @@
     const res = await fetch('/api/auth/me');
     loggedIn = res.ok;
   });
-
-  export let isLoggedIn = false;
 </script>
 
 <nav>
