@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { connectDB } from '$lib/server/db';
-import Post from '$lib/server/models/Post';
+import { Post } from '$lib/server/models/Post';
 
 export async function GET({ url }) {
   await connectDB();
