@@ -20,21 +20,126 @@
 </script>
 
 
-<h1>โพสต์ทั้งหมด</h1>
-<input bind:value={keyword} placeholder="ค้นหา..." />
-<button on:click={search}>ค้นหา</button>
+<main>
+  <h1>โพสต์ทั้งหมด</h1>
 
-{#if posts.length === 0}
-  <p>ยังไม่มีโพสต์</p>
-{:else}
-  {#each posts as post}
-    <div class="post">
-      <img src={post.imageUrl} alt="รูปภาพ" width="150" />
-      <p>เพศ: {post.gender}</p>
-      <p>อายุ: {post.age}</p>
-      <p>ไลน์: {post.line}</p>
-      <p>จังหวัด: {post.province}</p>
-      <p>รายละเอียด: {post.description}</p>
+  <!-- Search Bar -->
+  <div style="text-align: center;">
+    <input bind:value={keyword} placeholder="ค้นหา..." />
+    <button on:click={search}>ค้นหา</button>
+  </div>
+
+  <!-- Post Grid -->
+  {#if posts.length === 0}
+    <p class="no-posts">ยังไม่มีโพสต์</p>
+  {:else}
+    <div class="post-container">
+      {#each posts as post}
+        <div class="post">
+          <img src={post.imageUrl} alt="รูปภาพ" />
+          <p><strong>เพศ:</strong> {post.gender}</p>
+          <p><strong>อายุ:</strong> {post.age}</p>
+          <p><strong>ไลน์:</strong> {post.line}</p>
+          <p><strong>จังหวัด:</strong> {post.province}</p>
+          <p><strong>รายละเอียด:</strong> {post.details}</p>
+        </div>
+      {/each}
     </div>
-  {/each}
-{/if}
+  {/if}
+</main>
+
+<style>
+  /* General Layout */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* Header */
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  /* Search Bar */
+  input {
+    padding: 12px;
+    width: 80%;
+    max-width: 300px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    font-size: 1rem;
+  }
+
+  button {
+    padding: 12px 20px;
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #005fa3;
+  }
+
+  /* Post Grid */
+  .post-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* แสดงรูปในหลายคอลัมน์ */
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  /* Individual Post */
+  .post {
+    background-color: #fafafa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; /* ซ่อนไม่ให้เกิดการยืดของรูปภาพ */
+  }
+
+  .post:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Post Image */
+  .post img {
+    width: 100%; /* กำหนดความกว้างเต็มพื้นที่ */
+    height: 200px; /* ความสูงของรูปภาพ */
+    object-fit: cover; /* ให้ภาพครอบพื้นที่เต็ม */
+    border-radius: 8px; /* มุมรูปภาพโค้งมน */
+    margin-bottom: 15px; /* ช่องว่างระหว่างรูปกับเนื้อหา */
+  }
+
+  /* Post Info */
+  .post p {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #555;
+  }
+
+  /* Special Labels */
+  .post p strong {
+    color: #0077cc;
+  }
+
+  /* No Posts Message */
+  .no-posts {
+    text-align: center;
+    font-size: 1.25rem;
+    color: #999;
+    margin-top: 50px;
+  }
+</style>
+
