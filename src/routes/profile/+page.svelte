@@ -1,5 +1,6 @@
 <script>
-	let gender = '',
+	let title = '',
+		gender = '',
 		age = '',
 		line = '',
 		province = '',
@@ -9,7 +10,6 @@
 	export let data;
 	let user = data.user;
 	let posts = data.posts; // ✅ ต้องมีบรรทัดนี้
-
 
 	let provinces = [
 		'กรุงเทพมหานคร',
@@ -24,6 +24,7 @@
 
 	async function post() {
 		const formData = new FormData();
+		formData.append('title', title);
 		formData.append('gender', gender);
 		formData.append('age', age);
 		formData.append('line', line);
@@ -37,26 +38,31 @@
 			body: formData
 		});
 
+		console.log(formData);
+
 		const data = await res.json();
 		if (res.ok) {
 			alert('โพสต์แล้ว');
 
 			// เพิ่มโพสต์ใหม่ลงใน posts
 			const newPost = {
+				title,
 				gender,
 				age,
 				line,
 				province,
 				description: details,
-				imageUrl: `/uploads/${Date.now()}-${imageFile.name}`, // ใส่ path รูปภาพที่เพิ่งอัปโหลด
+				imageUrl: data.imageUrl, // ใส่ path รูปภาพที่เพิ่งอัปโหลด
 				_id: data._id, // ถ้า API ส่ง _id กลับมา
 				userId: user._id, // userId กรณีที่ต้องการแสดงผู้ใช้
 				createdAt: new Date()
 			};
 
+			console.log('เพิ่มโพสต์ใหม่ลงไปใน posts array', newPost);
 			posts = [newPost, ...posts]; // เพิ่มโพสต์ใหม่ลงไปใน posts array ที่มีอยู่
 
 			// เคลียร์ฟอร์ม
+			title = '';
 			gender = '';
 			age = '';
 			line = '';
@@ -69,22 +75,22 @@
 		}
 	}
 
-  async function deletePost(id) {
-    const confirmed = confirm('คุณแน่ใจหรือไม่ว่าต้องการลบโพสต์นี้?');
-    if (!confirmed) return;
+	async function deletePost(id) {
+		const confirmed = confirm('คุณแน่ใจหรือไม่ว่าต้องการลบโพสต์นี้?');
+		if (!confirmed) return;
 
-    const res = await fetch(`/api/posts/delete/${id}`, {
-      method: 'DELETE'
-    });
+		const res = await fetch(`/api/posts/delete/${id}`, {
+			method: 'DELETE'
+		});
 
-    const data = await res.json();
-    if (res.ok && data.success) {
-      // ลบโพสต์จาก array ทันที (ไม่ต้อง reload หน้า)
-      posts = posts.filter(p => p._id !== id);
-    } else {
-      alert(data.message || 'ลบโพสต์ไม่สำเร็จ');
-    }
-  }
+		const data = await res.json();
+		if (res.ok && data.success) {
+			// ลบโพสต์จาก array ทันที (ไม่ต้อง reload หน้า)
+			posts = posts.filter((p) => p._id !== id);
+		} else {
+			alert(data.message || 'ลบโพสต์ไม่สำเร็จ');
+		}
+	}
 </script>
 
 <div class="profile-container">
@@ -92,8 +98,8 @@
 	<div class="left-panel">
 		<!-- Profile Section -->
 		<div class="profile-header">
-			<h1>โปรไฟล์ของ {user.username} </h1>
-      <a href="/edit-profile" class="edit-link">แก้ไขโปรไฟล์</a>
+			<h1>โปรไฟล์ของ {user.username}</h1>
+			<a href="/edit-profile" class="edit-link">แก้ไขโปรไฟล์</a>
 			<p>ยินดีต้อนรับเข้าสู่โปรไฟล์ส่วนตัวของคุณ</p>
 		</div>
 
@@ -101,6 +107,9 @@
 		<section class="form-container">
 			<h2>สร้างโพสต์ใหม่</h2>
 			<form on:submit|preventDefault={post}>
+				<label>หัวข้อ</label>
+				<input type="text" bind:value={title} placeholder="ใส่หัวข้อ" required />
+
 				<label>เพศ</label>
 				<select bind:value={gender} required>
 					<option value="" disabled selected>เลือกเพศ</option>
@@ -145,12 +154,13 @@
 			{#each posts as post}
 				<div class="post-item">
 					<img src={post.imageUrl} alt="โพสต์รูป" />
+					<p class="text-overflow"><strong>{post.title}</strong></p>
 					<p><strong>เพศ:</strong> {post.gender}</p>
 					<p><strong>อายุ:</strong> {post.age}</p>
 					<p><strong>ไลน์:</strong> {post.line}</p>
 					<p><strong>จังหวัด:</strong> {post.province}</p>
-					<p><strong>รายละเอียด:</strong> {post.details}</p>
-          <button on:click={() => deletePost(post._id)}>🗑 ลบโพสต์</button>
+					<p class="text-overflow-multiline"><strong>รายละเอียด:</strong> {post.details}</p>
+					<button on:click={() => deletePost(post._id)}>🗑 ลบโพสต์</button>
 				</div>
 			{/each}
 		{:else}
@@ -209,19 +219,19 @@
 		border-radius: 4px;
 	}
 
-  .post-item button {
-    margin-top: 10px;
-    background-color: #cc0000;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+	.post-item button {
+		margin-top: 10px;
+		background-color: #cc0000;
+		color: white;
+		padding: 8px 12px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+	}
 
-  .post-item button:hover {
-    background-color: #a00000;
-  }
+	.post-item button:hover {
+		background-color: #a00000;
+	}
 
 	label {
 		display: block;
@@ -254,5 +264,19 @@
 
 	button:hover {
 		background-color: #005fa3;
+	}
+
+	.text-overflow {
+		white-space: nowrap; /* ป้องกันไม่ให้ข้อความย่อหน้า */
+		overflow: hidden; /* ซ่อนข้อความที่เกินขอบเขต */
+		text-overflow: ellipsis; /* แสดง "..." เมื่อข้อความยาวเกินขอบเขต */
+	}
+
+	.text-overflow-multiline {
+		display: -webkit-box;
+		-webkit-line-clamp: 3; /* ตั้งจำนวนบรรทัดที่จะแสดง */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 </style>

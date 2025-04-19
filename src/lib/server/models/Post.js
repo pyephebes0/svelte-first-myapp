@@ -7,6 +7,10 @@ const postSchema = new mongoose.Schema({
     required: true
   },
   imageUrl: { type: String, required: true },
+  title: { 
+    type: String, 
+    required: true // เพิ่ม title ให้เป็น required
+  },
   gender: { type: String, enum: ['ชาย', 'หญิง'], required: true },
   age: Number,
   line: String,

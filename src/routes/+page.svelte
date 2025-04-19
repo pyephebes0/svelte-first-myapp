@@ -37,11 +37,11 @@
       {#each posts as post}
         <div class="post">
           <img src={post.imageUrl} alt="รูปภาพ" />
+          <h3 class="post-title text-overflow">{post.title}</h3>
           <p><strong>เพศ:</strong> {post.gender}</p>
           <p><strong>อายุ:</strong> {post.age}</p>
           <p><strong>ไลน์:</strong> {post.line}</p>
-          <p><strong>จังหวัด:</strong> {post.province}</p>
-          <p><strong>รายละเอียด:</strong> {post.details}</p>
+          <p class="text-overflow-multiline"><strong>จังหวัด:</strong> {post.province}</p>
         </div>
       {/each}
     </div>
@@ -90,10 +90,10 @@
     background-color: #005fa3;
   }
 
-  /* Post Grid */
+  /* Post Grid (4 Posts per Row) */
   .post-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* แสดงรูปในหลายคอลัมน์ */
+    grid-template-columns: repeat(4, 1fr); /* 4 คอลัมน์ */
     gap: 20px;
     margin-top: 30px;
   }
@@ -111,6 +111,15 @@
   .post:hover {
     transform: translateY(-10px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Post Title */
+  .post-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
   }
 
   /* Post Image */
@@ -142,4 +151,5 @@
     margin-top: 50px;
   }
 </style>
+
 

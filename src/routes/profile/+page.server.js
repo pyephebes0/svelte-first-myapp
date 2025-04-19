@@ -25,7 +25,7 @@ export async function load({ cookies }) {
     const userId = user._id.toString();
 
     // ดึงโพสต์ของผู้ใช้จากฐานข้อมูล
-    const posts = await Post.find({ userId }).lean();
+    const posts = await Post.find({ userId }).sort({ createdAt: -1 }).lean();
 
     // แปลง userId ในโพสต์ให้เป็น string
     const postsWithStringUserId = posts.map(post => ({

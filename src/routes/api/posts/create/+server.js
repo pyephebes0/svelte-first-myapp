@@ -14,6 +14,7 @@ export async function POST({ request }) {
   if (!user) return json({ message: 'Unauthorized' }, { status: 401 });
 
   const form = await request.formData();
+  const title = form.get('title');
   const gender = form.get('gender');
   const age = form.get('age');
   const line = form.get('line');
@@ -38,7 +39,13 @@ export async function POST({ request }) {
 
   fs.writeFileSync(filePath, buffer);
 
+   // ตรวจสอบว่า title ไม่เป็นค่าว่าง
+   if (!title) {
+    return json({ message: 'หัวข้อหายไป' }, { status: 400 });
+  }
+
   const post = new Post({
+    title,
     gender,
     age,
     line,
