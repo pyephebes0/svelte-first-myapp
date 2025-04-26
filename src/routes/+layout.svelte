@@ -27,7 +27,7 @@
     }}>Logout</a>
   {:else}
     <a href="/login">Login</a>
-    <a href="/register">Register</a>
+    <a href="/register">ลงทะเบียน</a>
   {/if}
 </nav>
 <hr class="nav-divider" />
